@@ -1,26 +1,38 @@
 import React from 'react';
 
+/**
+ * @typedef {{ name: string, description: string, tags: string[], visual: 'heads-up' | 'wac' | 'dungeon', href: string }} Project
+ * @typedef {{ title: string, description: string, icon: 'brain' | 'palette' | 'chip' }} Category
+ * @typedef {{ label: string, href: string }} NavigationItem
+ * @typedef {{ label: string, href: string, mark: string }} SocialLink
+ */
+
+/** @type {Project[]} */
 const projects = [
   {
     name: 'HeadsUp',
-    description: 'A modern group chat experience built for real conversations.',
-    tags: ['iOS', 'Social', 'Messaging'],
+    description: 'A configurable Avalonia Windows HUD for GitHub repo/branch status, Actions jobs, and exact-SHA CI results.',
+    tags: ['Desktop'],
     visual: 'heads-up',
+    href: 'https://apps.microsoft.com/detail/9nmls5ft4zrw?hl=en-US&gl=US',
   },
   {
     name: 'WAC',
-    description: 'A social platform for fight fans. Follow events, fighters, and more.',
-    tags: ['iOS', 'Sports', 'Community'],
+    description: 'A native WinUI 3 app that turns PNG/JPEG files into a complete Microsoft Store/MSIX asset set.',
+    tags: ['Desktop'],
     visual: 'wac',
+    href: 'https://github.com/MrCodeGameandAnime/Windows-Asset-Creator',
   },
   {
     name: 'Dungeon Drifters',
-    description: 'A top-down action RPG about exploration, combat, and discovery.',
-    tags: ['Game', 'Pixel Art', 'RPG'],
+    description: 'A character-driven fantasy RPG in Ketlyv. Choose one of four Drifters and master their combat styles.',
+    tags: ['Web', 'Terminal'],
     visual: 'dungeon',
+    href: 'https://mrcodegameandanime.github.io/Dungeon-Drifters/',
   },
 ];
 
+/** @type {Category[]} */
 const categories = [
   {
     title: 'AI / Code',
@@ -39,11 +51,22 @@ const categories = [
   },
 ];
 
+/** @type {NavigationItem[]} */
 const navigation = [
   { label: 'Projects', href: '#projects' },
   { label: 'Experiments', href: '#experiments' },
   { label: 'Studio', href: '#studio' },
   { label: 'About', href: '#about' },
+];
+
+/** @type {SocialLink[]} */
+const socialLinks = [
+  { label: 'GitHub', href: 'https://github.com/MrCodeGameandAnime', mark: 'GH' },
+  { label: 'Threads', href: 'https://www.threads.com/@404.builds.dev', mark: 'TH' },
+  { label: 'X', href: 'https://x.com/404buildsdev', mark: 'X' },
+  { label: 'Instagram', href: 'https://www.instagram.com/404.builds.dev/', mark: 'IG' },
+  { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61594536011286', mark: 'FB' },
+  { label: 'Discord', href: 'https://discord.gg/NZnTcZtEQ', mark: 'DS' },
 ];
 
 function Arrow({ direction = '↗' }) {
@@ -106,7 +129,7 @@ function Hero() {
         <p className="hero-lede">Independent software, games, and experiments built from scratch.</p>
         <div className="hero-actions">
           <a className="button button-primary" href="#projects">View builds <Arrow direction="→" /></a>
-          <a className="button button-ghost" href="https://github.com/" target="_blank" rel="noreferrer">GitHub <span className="github-mark" aria-hidden="true">●</span></a>
+          <a className="button button-ghost" href="https://github.com/MrCodeGameandAnime" target="_blank" rel="noreferrer">GitHub <span className="github-mark" aria-hidden="true">●</span></a>
         </div>
       </div>
       <HeroEmblem />
@@ -114,6 +137,7 @@ function Hero() {
   );
 }
 
+/** @param {{ project: Project }} props */
 function ProjectVisual({ project }) {
   return (
     <div className={`project-art ${project.visual}`} aria-hidden="true">
@@ -141,6 +165,7 @@ function ProjectVisual({ project }) {
   );
 }
 
+/** @param {{ project: Project }} props */
 function BuildCard({ project }) {
   return (
     <article className="build-card">
@@ -152,8 +177,8 @@ function BuildCard({ project }) {
           {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
         </div>
         <div className="card-footer">
-          <a className="card-link" href="#studio">View project <Arrow direction="→" /></a>
-          <a className="card-open" href="#studio" aria-label={`${project.name} details`}><Arrow /></a>
+          <a className="card-link" href={project.href} target="_blank" rel="noreferrer">View project <Arrow direction="→" /></a>
+          <a className="card-open" href={project.href} target="_blank" rel="noreferrer" aria-label={`${project.name} details`}><Arrow /></a>
         </div>
       </div>
     </article>
@@ -196,6 +221,7 @@ function Philosophy() {
   );
 }
 
+/** @param {{ type: Category['icon'] }} props */
 function CategoryIcon({ type }) {
   return <span className={`category-icon icon-${type}`} aria-hidden="true"><i /><i /><i /></span>;
 }
@@ -241,10 +267,9 @@ function Footer() {
         </div>
         <div className="footer-meta">
           <div className="socials" aria-label="Social links">
-            <a href="https://github.com/" aria-label="GitHub" target="_blank" rel="noreferrer">GH</a>
-            <a href="https://www.youtube.com/" aria-label="YouTube" target="_blank" rel="noreferrer">YT</a>
-            <a href="https://x.com/" aria-label="X" target="_blank" rel="noreferrer">X</a>
-            <a href="https://discord.com/" aria-label="Discord" target="_blank" rel="noreferrer">DS</a>
+            {socialLinks.map(({ label, href, mark }) => (
+              <a key={label} href={href} aria-label={label} target="_blank" rel="noreferrer">{mark}</a>
+            ))}
           </div>
           <span>© 404 BUILDS 2025</span>
         </div>

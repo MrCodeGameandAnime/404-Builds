@@ -20,7 +20,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; background: var(--bg); }
+body { margin: 0; background: var(--bg); }
 a { color: inherit; text-decoration: none; }
 a:focus-visible { outline: 2px solid var(--red-hot); outline-offset: 5px; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -206,7 +206,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .nav-shell { gap: 25px; }.primary-nav { gap: 18px; }
   .hero { grid-template-columns: 1fr; padding-top: 65px; padding-bottom: 30px; }
   .hero-copy { padding: 0; }.hero-art { justify-self: center; width: min(100%, 560px); margin-top: -14px; }
-  .build-grid, .explore-grid { grid-template-columns: 1fr; }
+  .build-grid, .explore-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .project-art { height: 250px; }
   .philosophy { grid-template-columns: 1fr; gap: 36px; }.glitch-panel { max-width: 560px; }
   .footer-shell { grid-template-columns: 1fr; padding: 36px 0; }.footer-nav { justify-content: flex-start; flex-wrap: wrap; }.footer-meta { justify-items: start; }
@@ -219,6 +219,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .hero { min-height: auto; padding-top: 68px; }.hero h1 { font-size: clamp(3.2rem, 15vw, 5rem); }.hero h1 .hero-highlight { white-space: normal; }.hero-lede { font-size: 16px; }.hero-art { width: calc(100% + 14px); margin: 4px -7px 0; }
   .emblem-core { width: 48%; }.emblem-mark span { font-size: clamp(2.7rem, 14vw, 4rem); }
   .section { padding: 64px 0; }.section-heading { display: block; }.section-note { margin-top: 18px; }.section h2 { font-size: 2.45rem; }
+  .build-grid, .explore-grid { grid-template-columns: 1fr; }
   .project-art { height: 205px; }.card-body { padding: 19px; }.card-body > p { min-height: auto; }
   .philosophy-copy h2 { font-size: 2.8rem; }.philosophy-copy p { font-size: 14px; }.glitch-panel { height: 210px; }
   .explore-card { grid-template-columns: 46px 1fr 18px; gap: 12px; padding: 18px; }.category-icon { transform: scale(.88); transform-origin: left center; }
