@@ -102,7 +102,7 @@ function Hero() {
     <section className="hero shell" aria-labelledby="hero-heading">
       <div className="hero-copy">
         <div className="eyebrow"><span className="eyebrow-line" />Independent studio</div>
-        <h1 id="hero-heading">We build <span>what&apos;s missing</span></h1>
+        <h1 id="hero-heading">We build <span className="hero-highlight">what&apos;s missing</span></h1>
         <p className="hero-lede">Independent software, games, and experiments built from scratch.</p>
         <div className="hero-actions">
           <a className="button button-primary" href="#projects">View builds <Arrow direction="→" /></a>
@@ -256,6 +256,7 @@ function Footer() {
 export default function App() {
   return (
     <div id="top" className="site-shell">
+      <div className="site-grid" aria-hidden="true" />
       <Header />
       <main>
         <Hero />

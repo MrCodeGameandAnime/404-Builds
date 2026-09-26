@@ -12,6 +12,19 @@ describe('404 Builds landing page', () => {
     expect(screen.getByRole('heading', { name: /we build what.s missing/i })).toBeInTheDocument();
   });
 
+  test('keeps the highlighted hero phrase in a dedicated responsive element', () => {
+    render(<App />);
+
+    const headline = screen.getByRole('heading', { name: /we build what.s missing/i });
+    expect(headline.querySelector('.hero-highlight')).toHaveTextContent("what's missing");
+  });
+
+  test('includes a decorative background grid hidden from assistive technology', () => {
+    render(<App />);
+
+    expect(document.querySelector('.site-grid')).toHaveAttribute('aria-hidden', 'true');
+  });
+
   test('renders all selected builds and explore categories', () => {
     render(<App />);
 
