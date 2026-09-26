@@ -1,4 +1,9 @@
-node_modules/
+# Generated artifacts for the app package.
 root/node_modules/
-dist/
+root/.vite/
+root/dist/
+
+# Keep any legacy project-level artifacts out of version control.
+node_modules/
 .vite/
+dist/
