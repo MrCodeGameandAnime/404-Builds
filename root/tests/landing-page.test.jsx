@@ -107,7 +107,7 @@ describe('404 Builds landing page', () => {
 
     const projects = [
       { name: 'HeadsUp', href: 'https://apps.microsoft.com/detail/9nmls5ft4zrw?hl=en-US&gl=US' },
-      { name: 'WAC', href: 'https://github.com/MrCodeGameandAnime/Windows-Asset-Creator' },
+      { name: 'WAC', href: 'https://apps.microsoft.com/detail/9ppcx5fvpdn3?hl=en-US&gl=US' },
       { name: 'Dungeon Drifters', href: 'https://mrcodegameandanime.github.io/Dungeon-Drifters/' },
     ];
 
