@@ -29,6 +29,13 @@ describe('404 Builds landing page', () => {
     expect(headline.querySelector('.hero-highlight')).toHaveTextContent("what's missing");
   });
 
+  test('shows the concise hero description without the studio eyebrow', () => {
+    render(<App />);
+
+    expect(screen.getByText('Software, games, and experiments')).toBeInTheDocument();
+    expect(screen.queryByText('Independent studio')).not.toBeInTheDocument();
+  });
+
   test('includes a decorative background grid hidden from assistive technology', () => {
     render(<App />);
 
@@ -64,11 +71,23 @@ describe('404 Builds landing page', () => {
       expect(card.querySelectorAll('.tag-list span')).toHaveLength(tags.length);
     });
 
-    expect(screen.getByText('AI / Code')).toBeInTheDocument();
+    expect(screen.getByText('AI')).toBeInTheDocument();
     expect(screen.getByText('Design & Merch')).toBeInTheDocument();
     expect(screen.getByText('Hardware / Experiments')).toBeInTheDocument();
     expect(screen.getByText('Tools, automations, and experiments with AI and modern development.')).toBeInTheDocument();
     expect(screen.getByText('Physical builds, electronics, and unconventional ideas.')).toBeInTheDocument();
+  });
+
+  test('routes only the AI category tile to the Bead Out AI repository', () => {
+    render(<App />);
+
+    const aiLink = screen.getByRole('heading', { name: 'AI' }).closest('a');
+    const designLink = screen.getByRole('heading', { name: 'Design & Merch' }).closest('a');
+    const hardwareLink = screen.getByRole('heading', { name: 'Hardware / Experiments' }).closest('a');
+
+    expect(aiLink).toHaveAttribute('href', 'https://github.com/MrCodeGameandAnime/Bead-Out-AI');
+    expect(designLink).toHaveAttribute('href', '#studio');
+    expect(hardwareLink).toHaveAttribute('href', '#studio');
   });
 
   test('exposes named navigation and CTA links', () => {
@@ -132,6 +151,21 @@ describe('404 Builds landing page', () => {
     expect(screen.getByTestId('hero-emblem')).toHaveTextContent('404');
     expect(screen.getByRole('heading', { name: 'Error is the blueprint' })).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: /view project/i })).toHaveLength(3);
+  });
+
+  test('renders the philosophy copy with the requested sentence punctuation', () => {
+    render(<App />);
+
+    expect(screen.getByText('404 Builds is where failure meets creation. A digital foundry for the imperfect and the impossible. We turn ideas, edge cases, and “what ifs” into real products, experiences, and tools.')).toBeInTheDocument();
+  });
+
+  test('places the philosophy section label above its two-column content', () => {
+    render(<App />);
+
+    const philosophy = document.querySelector('#about');
+    expect(philosophy.querySelector(':scope > .philosophy-heading .section-kicker')).toHaveTextContent('// 02 Our philosophy');
+    expect(philosophy.querySelector(':scope > .philosophy-content .philosophy-copy')).toBeInTheDocument();
+    expect(philosophy.querySelector('.philosophy-copy .section-kicker')).not.toBeInTheDocument();
   });
 
   test('keeps all interactive controls keyboard-addressable', () => {

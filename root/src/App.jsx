@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
  * @typedef {{ name: string, description: string, tags: string[], visual: 'heads-up' | 'wac' | 'dungeon', href: string }} Project
- * @typedef {{ title: string, description: string, icon: 'brain' | 'palette' | 'chip' }} Category
+ * @typedef {{ title: string, description: string, icon: 'brain' | 'palette' | 'chip', href?: string }} Category
  * @typedef {{ label: string, href: string }} NavigationItem
  * @typedef {{ label: string, href: string, mark: string }} SocialLink
  */
@@ -35,9 +35,10 @@ const projects = [
 /** @type {Category[]} */
 const categories = [
   {
-    title: 'AI / Code',
+    title: 'AI',
     description: 'Tools, automations, and experiments with AI and modern development.',
     icon: 'brain',
+    href: 'https://github.com/MrCodeGameandAnime/Bead-Out-AI',
   },
   {
     title: 'Design & Merch',
@@ -124,9 +125,8 @@ function Hero() {
   return (
     <section className="hero shell" aria-labelledby="hero-heading">
       <div className="hero-copy">
-        <div className="eyebrow"><span className="eyebrow-line" />Independent studio</div>
         <h1 id="hero-heading">We build <span className="hero-highlight">what&apos;s missing</span></h1>
-        <p className="hero-lede">Independent software, games, and experiments built from scratch.</p>
+        <p className="hero-lede">Software, games, and experiments</p>
         <div className="hero-actions">
           <a className="button button-primary" href="#projects">View builds <Arrow direction="→" /></a>
           <a className="button button-ghost" href="https://github.com/MrCodeGameandAnime" target="_blank" rel="noreferrer">GitHub <span className="github-mark" aria-hidden="true">●</span></a>
@@ -205,17 +205,21 @@ function BuildGrid() {
 function Philosophy() {
   return (
     <section className="philosophy section shell" id="about" aria-labelledby="philosophy-heading">
-      <div className="glitch-panel" aria-hidden="true">
-        <div className="glitch-photo" />
-        <div className="glitch-block block-one" />
-        <div className="glitch-block block-two" />
-        <div className="glitch-block block-three" />
-        <div className="glitch-frame" />
-      </div>
-      <div className="philosophy-copy">
+      <div className="philosophy-heading">
         <div className="section-kicker">// 02 <span>Our philosophy</span></div>
-        <h2 id="philosophy-heading">Error is the <span>blueprint</span></h2>
-        <p>404 Builds is where failure meets creation — a digital foundry for the imperfect and the impossible. We turn ideas, edge cases, and “what ifs” into real products, experiences, and tools.</p>
+      </div>
+      <div className="philosophy-content">
+        <div className="glitch-panel" aria-hidden="true">
+          <div className="glitch-photo" />
+          <div className="glitch-block block-one" />
+          <div className="glitch-block block-two" />
+          <div className="glitch-block block-three" />
+          <div className="glitch-frame" />
+        </div>
+        <div className="philosophy-copy">
+          <h2 id="philosophy-heading">Error is the <span>blueprint</span></h2>
+          <p>404 Builds is where failure meets creation. A digital foundry for the imperfect and the impossible. We turn ideas, edge cases, and “what ifs” into real products, experiences, and tools.</p>
+        </div>
       </div>
     </section>
   );
@@ -237,7 +241,7 @@ function ExploreGrid() {
       </div>
       <div className="explore-grid">
         {categories.map((category) => (
-          <a className="explore-card" href="#studio" key={category.title}>
+          <a className="explore-card" href={category.href ?? '#studio'} key={category.title}>
             <CategoryIcon type={category.icon} />
             <div>
               <h3>{category.title}</h3>

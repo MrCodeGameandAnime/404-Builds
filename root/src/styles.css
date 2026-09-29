@@ -157,7 +157,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .card-open { display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid var(--line); color: var(--muted-light); font-size: 13px; }
 .card-open:hover { border-color: var(--red); color: var(--red-hot); }
 
-.philosophy { display: grid; grid-template-columns: .75fr 1.25fr; align-items: center; gap: 74px; }
+.philosophy { display: block; }
+.philosophy-heading { margin-bottom: 30px; }
+.philosophy-content { display: grid; grid-template-columns: .75fr 1.25fr; align-items: center; gap: 74px; }
 .glitch-panel { position: relative; height: 252px; overflow: hidden; background: #101318; }
 .glitch-photo { position: absolute; inset: 11% 16% 12% 16%; background: linear-gradient(148deg, transparent 0 14%, #d3d4d1 15% 23%, transparent 24% 32%, #7c8082 33% 45%, transparent 46%), linear-gradient(25deg, #080a0d 0 38%, #484a4c 39% 52%, #171b21 53% 70%, #a2a4a3 71% 77%, #111318 78%); filter: grayscale(1) contrast(1.3); opacity: .78; clip-path: polygon(0 11%, 18% 11%, 18% 0, 46% 0, 46% 12%, 77% 12%, 77% 4%, 100% 4%, 100% 86%, 84% 86%, 84% 100%, 57% 100%, 57% 89%, 26% 89%, 26% 100%, 0 100%); }
 .glitch-panel::before { position: absolute; inset: 20% 0 auto; height: 1px; content: ""; background: var(--red); box-shadow: 0 32px 0 rgba(255, 38, 61, .42), 0 73px 0 rgba(255, 38, 61, .23); }
@@ -166,7 +168,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .block-one { top: 16%; left: 0; width: 65px; height: 8px; }
 .block-two { right: 0; bottom: 24%; width: 72px; height: 5px; }
 .block-three { left: 18%; bottom: 8%; width: 126px; height: 3px; opacity: .36; }
-.philosophy-copy .section-kicker { margin-bottom: 14px; }
 .philosophy-copy h2 { max-width: 640px; font-size: clamp(2.7rem, 5vw, 4.7rem); }
 .philosophy-copy p { max-width: 660px; margin: 18px 0 0; color: var(--muted); font-size: 16px; line-height: 1.65; }
 
@@ -208,7 +209,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .hero-copy { padding: 0; }.hero-art { justify-self: center; width: min(100%, 560px); margin-top: -14px; }
   .build-grid, .explore-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .project-art { height: 250px; }
-  .philosophy { grid-template-columns: 1fr; gap: 36px; }.glitch-panel { max-width: 560px; }
+  .philosophy-content { grid-template-columns: 1fr; gap: 36px; }.glitch-panel { max-width: 560px; }
   .footer-shell { grid-template-columns: 1fr; padding: 36px 0; }.footer-nav { justify-content: flex-start; flex-wrap: wrap; }.footer-meta { justify-items: start; }
 }
 
