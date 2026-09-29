@@ -21,7 +21,7 @@ const projects = [
     description: 'A native WinUI 3 app that turns PNG/JPEG files into a complete Microsoft Store/MSIX asset set.',
     tags: ['Desktop'],
     visual: 'wac',
-    href: 'https://github.com/MrCodeGameandAnime/Windows-Asset-Creator',
+    href: 'https://apps.microsoft.com/detail/9ppcx5fvpdn3?hl=en-US&gl=US',
   },
   {
     name: 'Dungeon Drifters',
