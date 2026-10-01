@@ -13,5 +13,11 @@ export default defineConfig({
   build: {
     outDir: path.join(rootPackage, 'dist'),
     emptyOutDir: true,
+    rollupOptions: {
+      input: [
+        path.resolve(projectRoot, 'index.html'),
+        path.resolve(projectRoot, 'about.html'),
+      ],
+    },
   },
 });

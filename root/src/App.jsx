@@ -80,20 +80,26 @@ function Arrow({ direction = '↗' }) {
   return <span aria-hidden="true">{direction}</span>;
 }
 
-function Header() {
+function pageHref(href, page) {
+  if (href === '#about') return './about.html';
+  return page === 'about' ? `./index.html${href}` : href;
+}
+
+/** @param {{ page?: 'home' | 'about' }} props */
+export function Header({ page = 'home' }) {
   return (
     <header className="site-header">
       <div className="shell nav-shell">
-        <a className="brand" href="#top" aria-label="404 Builds home">
+        <a className="brand" href={pageHref('#top', page)} aria-label="404 Builds home">
           <span className="brand-number">404</span>
           <span className="brand-word">BUILDS</span>
         </a>
         <nav className="primary-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
-            <a key={item.label} href={item.href}>{item.label}</a>
+            <a key={item.label} href={pageHref(item.href, page)}>{item.label}</a>
           ))}
         </nav>
-        <a className="nav-cta" href="#studio">
+        <a className="nav-cta" href={pageHref('#studio', page)}>
           <span>Start here</span>
           <Arrow />
         </a>
@@ -261,19 +267,20 @@ function ExploreGrid() {
   );
 }
 
-function Footer() {
+/** @param {{ page?: 'home' | 'about' }} props */
+export function Footer({ page = 'home' }) {
   return (
     <footer className="site-footer" id="studio">
       <div className="shell footer-shell">
         <div className="footer-brand">
-          <a className="brand" href="#top" aria-label="404 Builds home">
+          <a className="brand" href={pageHref('#top', page)} aria-label="404 Builds home">
             <span className="brand-number">404</span>
             <span className="brand-word">BUILDS</span>
           </a>
           <span>We build what&apos;s missing.</span>
         </div>
         <div className="footer-nav">
-          {navigation.map((item) => <a key={item.label} href={item.href} aria-label={`${item.label} footer link`}>{item.label}</a>)}
+          {navigation.map((item) => <a key={item.label} href={pageHref(item.href, page)} aria-label={`${item.label} footer link`}>{item.label}</a>)}
         </div>
         <div className="footer-meta">
           <div className="socials" aria-label="Social links">
