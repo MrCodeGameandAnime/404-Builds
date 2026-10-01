@@ -3,7 +3,7 @@
 import { readFile } from 'node:fs/promises';
 import { JSDOM, ResourceLoader } from 'jsdom';
 import { describe, expect, it } from 'vitest';
-import { resolveConfig } from 'vite';
+import { build, resolveConfig } from 'vite';
 import viteConfig from '../vite.config.js';
 
 describe('GitHub Pages deployment setup', () => {
@@ -20,6 +20,32 @@ describe('GitHub Pages deployment setup', () => {
 
     expect(resolved.base).toBe('./');
   });
+
+  it('ships the favicon and points the built page to that emitted asset', async () => {
+    const sourceFavicon = await readFile(new URL('../res/favicon.png', import.meta.url));
+    const bundle = await build({
+      ...viteConfig,
+      configFile: false,
+      logLevel: 'silent',
+      build: {
+        ...viteConfig.build,
+        write: false,
+      },
+    });
+    const outputFiles = Array.isArray(bundle)
+      ? bundle.flatMap(({ output }) => output)
+      : bundle.output;
+    const htmlAsset = outputFiles.find((asset) => asset.type === 'asset' && asset.fileName === 'index.html');
+    const faviconAsset = outputFiles.find((asset) => (
+      asset.type === 'asset' && Buffer.from(asset.source).equals(sourceFavicon)
+    ));
+    const page = new JSDOM(Buffer.from(htmlAsset.source).toString());
+
+    expect(faviconAsset).toBeDefined();
+    expect(page.window.document.querySelector('link[rel="icon"]')?.getAttribute('href'))
+      .toBe(`./${faviconAsset.fileName}`);
+    page.window.close();
+  }, 15_000);
 
   it('loads Metricool globally and initializes the tracker with this site’s hash', async () => {
     const html = await readFile(new URL('../../index.html', import.meta.url), 'utf8');

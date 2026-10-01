@@ -199,8 +199,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .footer-brand .brand-number { font-size: 22px; }.footer-brand .brand-word { font-size: 16px; }
 .footer-nav { display: flex; justify-content: center; gap: 27px; color: var(--muted-light); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
 .footer-meta { display: grid; justify-items: end; gap: 14px; color: var(--muted); font-family: var(--mono); font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
-.socials { display: flex; gap: 16px; color: var(--white); font-size: 11px; }
-.socials a:hover { color: var(--red-hot); }
+.socials { display: flex; gap: 8px; color: var(--white); }
+.socials a { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid transparent; transition: background .2s ease, border-color .2s ease; }
+.socials img { display: block; width: 16px; height: 16px; filter: brightness(0) invert(1); }
+.socials a:hover, .socials a:focus-visible { border-color: rgba(255, 38, 61, .65); background: rgba(255, 38, 61, .14); }
 
 @media (max-width: 960px) {
   .shell { width: min(100% - 48px, 720px); }

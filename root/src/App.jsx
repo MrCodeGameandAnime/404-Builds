@@ -1,10 +1,16 @@
 import React from 'react';
+import discordIcon from '../res/discord.svg';
+import facebookIcon from '../res/facebook.svg';
+import githubIcon from '../res/github.svg';
+import instagramIcon from '../res/instagram.svg';
+import threadsIcon from '../res/threads.svg';
+import xIcon from '../res/x.svg';
 
 /**
  * @typedef {{ name: string, description: string, tags: string[], visual: 'heads-up' | 'wac' | 'dungeon', href: string }} Project
  * @typedef {{ title: string, description: string, icon: 'brain' | 'palette' | 'chip', href?: string }} Category
  * @typedef {{ label: string, href: string }} NavigationItem
- * @typedef {{ label: string, href: string, mark: string }} SocialLink
+ * @typedef {{ label: string, href: string, icon: string }} SocialLink
  */
 
 /** @type {Project[]} */
@@ -62,12 +68,12 @@ const navigation = [
 
 /** @type {SocialLink[]} */
 const socialLinks = [
-  { label: 'GitHub', href: 'https://github.com/MrCodeGameandAnime', mark: 'GH' },
-  { label: 'Threads', href: 'https://www.threads.com/@404.builds.dev', mark: 'TH' },
-  { label: 'X', href: 'https://x.com/404buildsdev', mark: 'X' },
-  { label: 'Instagram', href: 'https://www.instagram.com/404.builds.dev/', mark: 'IG' },
-  { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61594536011286', mark: 'FB' },
-  { label: 'Discord', href: 'https://discord.gg/NZnTcZtEQ', mark: 'DS' },
+  { label: 'GitHub', href: 'https://github.com/MrCodeGameandAnime', icon: githubIcon },
+  { label: 'Threads', href: 'https://www.threads.com/@404.builds.dev', icon: threadsIcon },
+  { label: 'X', href: 'https://x.com/404buildsdev', icon: xIcon },
+  { label: 'Instagram', href: 'https://www.instagram.com/404.builds.dev/', icon: instagramIcon },
+  { label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61594536011286', icon: facebookIcon },
+  { label: 'Discord', href: 'https://discord.gg/NZnTcZtEQ', icon: discordIcon },
 ];
 
 function Arrow({ direction = '↗' }) {
@@ -271,8 +277,10 @@ function Footer() {
         </div>
         <div className="footer-meta">
           <div className="socials" aria-label="Social links">
-            {socialLinks.map(({ label, href, mark }) => (
-              <a key={label} href={href} aria-label={label} target="_blank" rel="noreferrer">{mark}</a>
+            {socialLinks.map(({ label, href, icon }) => (
+              <a key={label} href={href} aria-label={label} target="_blank" rel="noreferrer">
+                <img src={icon} alt="" />
+              </a>
             ))}
           </div>
           <span>© 404 BUILDS 2025</span>

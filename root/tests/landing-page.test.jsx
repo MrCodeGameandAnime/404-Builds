@@ -145,6 +145,24 @@ describe('404 Builds landing page', () => {
     });
   });
 
+  test('renders each social link with its matching decorative SVG icon', () => {
+    render(<App />);
+
+    const socials = document.querySelector('.socials');
+    const iconNames = ['GitHub', 'Threads', 'X', 'Instagram', 'Facebook', 'Discord'];
+
+    iconNames.forEach((name) => {
+      const link = within(socials).getByRole('link', { name });
+      const icon = link.querySelector('img');
+
+      expect(icon).not.toBeNull();
+      expect(icon).toHaveAttribute('alt', '');
+      const svgDataUrl = icon.getAttribute('src');
+      expect(svgDataUrl).toMatch(/^data:image\/svg\+xml,/);
+      expect(decodeURIComponent(svgDataUrl.split(',')[1])).toContain(`<title>${name}</title>`);
+    });
+  });
+
   test('renders the CSS-built hero emblem and editorial sections', () => {
     render(<App />);
 
