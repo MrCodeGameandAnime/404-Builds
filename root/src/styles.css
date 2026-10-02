@@ -54,13 +54,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
   backdrop-filter: blur(14px);
 }
 .nav-shell { min-height: 82px; display: flex; align-items: center; gap: 48px; }
+.nav-identity-row { display: contents; }
 .brand { display: inline-flex; align-items: baseline; gap: 7px; font-family: var(--mono); font-weight: 800; letter-spacing: -.07em; }
 .brand-number { color: var(--red); font-size: 27px; letter-spacing: -.1em; }
 .brand-word { color: var(--white); font-size: 20px; letter-spacing: -.08em; }
-.primary-nav { display: flex; align-items: center; gap: 36px; margin: 0 auto; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: #d0d5da; }
+.primary-nav { order: 2; display: flex; align-items: center; gap: 36px; margin: 0 auto; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: #d0d5da; }
 .primary-nav a, .footer-nav a { transition: color .2s ease; }
 .primary-nav a:hover, .footer-nav a:hover { color: var(--red-hot); }
-.nav-cta { display: inline-flex; align-items: center; gap: 18px; padding: 12px 18px; border: 1px solid var(--red); color: var(--red-hot); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .16em; transition: background .2s ease, box-shadow .2s ease, color .2s ease; }
+.nav-cta { order: 3; display: inline-flex; align-items: center; gap: 18px; padding: 12px 18px; border: 1px solid var(--red); color: var(--red-hot); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .16em; transition: background .2s ease, box-shadow .2s ease, color .2s ease; }
 .nav-cta:hover { color: var(--white); background: rgba(255, 38, 61, .12); box-shadow: 0 0 26px rgba(255, 38, 61, .2); }
 
 .hero { min-height: 640px; display: grid; grid-template-columns: minmax(0, .94fr) minmax(420px, 1.06fr); align-items: center; gap: 40px; border-bottom: 1px solid var(--line); position: relative; }
@@ -217,7 +218,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 @media (max-width: 620px) {
   .shell { width: min(100% - 32px, 520px); }
-  .nav-shell { min-height: 72px; flex-wrap: wrap; padding: 15px 0; }.primary-nav { order: 3; width: 100%; justify-content: space-between; gap: 12px; font-size: 9px; }.nav-cta { margin-left: auto; padding: 9px 11px; font-size: 9px; }
+  .nav-shell { min-height: 0; display: grid; grid-template-areas: "identity" "navigation"; grid-template-columns: minmax(0, 1fr); gap: 11px; padding: 12px 0 10px; }
+  .nav-identity-row { grid-area: identity; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .primary-nav { grid-area: navigation; order: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: center; width: 100%; margin: 0; padding-top: 10px; border-top: 1px solid var(--line); gap: 0; text-align: center; font-size: clamp(8px, 2.7vw, 9px); letter-spacing: .08em; }
+  .primary-nav a { white-space: nowrap; }
+  .nav-cta { order: 0; margin-left: 0; padding: 9px 11px; font-size: 9px; }
   .brand-number { font-size: 23px; }.brand-word { font-size: 17px; }
   .hero { min-height: auto; padding-top: 68px; }.hero h1 { font-size: clamp(3.2rem, 15vw, 5rem); }.hero h1 .hero-highlight { white-space: normal; }.hero-lede { font-size: 16px; }.hero-art { width: calc(100% + 14px); margin: 4px -7px 0; }
   .emblem-core { width: 48%; }.emblem-mark span { font-size: clamp(2.7rem, 14vw, 4rem); }
@@ -261,9 +266,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .about-main { padding: 0 0 56px; }
   .about-story { margin-top: 18px; }
   .about-mission, .founder-spotlight { padding: 27px 23px; }
+  .founder-spotlight { align-items: flex-start; text-align: left; }
   .about-mission h1 { margin: 20px 0 17px; font-size: clamp(2.55rem, 12vw, 3.35rem); }
   .about-mission p { font-size: 1rem; line-height: 1.7; }
-  .founder-portrait-link { gap: 10px; margin: 22px 0 18px; }
+  .founder-portrait-link { justify-content: flex-start; gap: 10px; margin: 22px 0 18px; }
   .founder-chevron { font-size: 40px; }
-  .founder-portrait-frame { width: min(60vw, 208px); }
+  .founder-portrait-frame { width: min(48vw, 176px); }
 }

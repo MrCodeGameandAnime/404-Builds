@@ -1,4 +1,6 @@
 import React from 'react';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import { render, screen, within } from '@testing-library/react';
 import { beforeAll, describe, expect, test } from 'vitest';
 
@@ -57,5 +59,29 @@ describe('404 Builds About page', () => {
     expect(profileLink).toHaveAttribute('rel', 'noreferrer');
     expect(within(profileLink).getByRole('img', { name: 'MrCodeGameAndAnime' })).toBeInTheDocument();
     expect(screen.getByText('>', { exact: true })).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  test('keeps the mobile founder stack left-aligned like desktop while reducing only the portrait', async () => {
+    const aboutStyles = await readFile(path.resolve('src/styles.css'), 'utf8');
+    const stylesheet = document.createElement('style');
+    stylesheet.textContent = aboutStyles;
+    document.head.append(stylesheet);
+
+    try {
+      const mobileRules = Array.from(stylesheet.sheet.cssRules)
+        .filter((rule) => rule.conditionText === '(max-width: 620px)')
+        .flatMap((rule) => Array.from(rule.cssRules));
+      expect(mobileRules).toBeDefined();
+      const getRule = (selector) => Array.from(mobileRules)
+        .find((rule) => rule.selectorText === selector);
+
+      expect(getRule('.founder-spotlight').style.getPropertyValue('align-items')).toBe('flex-start');
+      expect(getRule('.founder-spotlight').style.getPropertyValue('text-align')).toBe('left');
+      expect(getRule('.founder-portrait-link').style.getPropertyValue('justify-content')).toBe('flex-start');
+      expect(getRule('.founder-portrait-frame').style.getPropertyValue('width')).toBe('min(48vw, 176px)');
+      expect(getRule('.founder-chevron').style.getPropertyValue('font-size')).toBe('40px');
+    } finally {
+      stylesheet.remove();
+    }
   });
 });

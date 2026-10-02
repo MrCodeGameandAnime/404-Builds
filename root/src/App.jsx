@@ -90,19 +90,21 @@ export function Header({ page = 'home' }) {
   return (
     <header className="site-header">
       <div className="shell nav-shell">
-        <a className="brand" href={pageHref('#top', page)} aria-label="404 Builds home">
-          <span className="brand-number">404</span>
-          <span className="brand-word">BUILDS</span>
-        </a>
+        <div className="nav-identity-row">
+          <a className="brand" href={pageHref('#top', page)} aria-label="404 Builds home">
+            <span className="brand-number">404</span>
+            <span className="brand-word">BUILDS</span>
+          </a>
+          <a className="nav-cta" href={pageHref('#studio', page)}>
+            <span>Start here</span>
+            <Arrow />
+          </a>
+        </div>
         <nav className="primary-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
             <a key={item.label} href={pageHref(item.href, page)}>{item.label}</a>
           ))}
         </nav>
-        <a className="nav-cta" href={pageHref('#studio', page)}>
-          <span>Start here</span>
-          <Arrow />
-        </a>
       </div>
     </header>
   );

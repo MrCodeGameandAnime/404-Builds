@@ -5,6 +5,19 @@ import * as Site from '../src/App.jsx';
 import App from '../src/App.jsx';
 
 describe('page-aware shared navigation', () => {
+  test('groups the brand and primary action above the section links', () => {
+    render(Site.Header ? React.createElement(Site.Header) : null);
+
+    const header = screen.getByRole('banner');
+    const brand = within(header).getByRole('link', { name: '404 Builds home' });
+    const action = within(header).getByRole('link', { name: 'Start here' });
+    const navigation = within(header).getByRole('navigation', { name: 'Primary navigation' });
+
+    expect(brand.parentElement).toBe(action.parentElement);
+    expect(brand.parentElement).not.toBe(navigation.parentElement);
+    expect(brand.parentElement.nextElementSibling).toBe(navigation);
+  });
+
   test('the home page opens About as a separate page while retaining its section links', () => {
     render(<App />);
 
