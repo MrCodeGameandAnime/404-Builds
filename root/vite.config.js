@@ -8,6 +8,7 @@ const cacheDir = path.join(rootPackage, 'node_modules', '.vite');
 
 export default defineConfig({
   root: projectRoot,
+  publicDir: path.join(rootPackage, 'public'),
   base: './',
   cacheDir,
   build: {

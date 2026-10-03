@@ -36,11 +36,11 @@ async function readSourceHtml(path) {
 }
 
 describe('GitHub Pages deployment setup', () => {
-  it('uses the concise brand as the browser tab title', async () => {
+  it('uses a descriptive brand title in the browser tab', async () => {
     const html = await readFile(new URL('../../index.html', import.meta.url), 'utf8');
     const page = new JSDOM(html);
 
-    expect(page.window.document.title).toBe('404 Builds');
+    expect(page.window.document.title).toBe('404 Builds | Software, Games & AI Experiments');
     page.window.close();
   });
 
@@ -50,8 +50,8 @@ describe('GitHub Pages deployment setup', () => {
     expect(resolved.base).toBe('./');
   });
 
-  it('ships the favicon and points the built page to that emitted asset', async () => {
-    const sourceFavicon = await readFile(new URL('../res/favicon.png', import.meta.url));
+  it('ships a compact favicon and points the built page to that emitted asset', async () => {
+    const sourceFavicon = await readFile(new URL('../res/optimized/favicon.png', import.meta.url));
     const outputFiles = await getBuiltOutputFiles();
     const htmlAsset = outputFiles.find((asset) => asset.type === 'asset' && asset.fileName === 'index.html');
     const faviconAsset = outputFiles.find((asset) => (
@@ -60,12 +60,13 @@ describe('GitHub Pages deployment setup', () => {
     const page = new JSDOM(Buffer.from(htmlAsset.source).toString());
 
     expect(faviconAsset).toBeDefined();
+    expect(sourceFavicon.byteLength).toBeLessThan(100_000);
     expect(page.window.document.querySelector('link[rel="icon"]')?.getAttribute('href'))
       .toBe(`./${faviconAsset.fileName}`);
     page.window.close();
   }, 30_000);
 
-  it('builds both pages with relative local URLs and emits the original About images', async () => {
+  it('builds both pages with relative local URLs and emits the optimized About images', async () => {
     const outputFiles = await getBuiltOutputFiles();
     const builtPages = Object.fromEntries(outputFiles
       .filter((asset) => asset.type === 'asset' && ['index.html', 'about.html'].includes(asset.fileName))
@@ -79,37 +80,70 @@ describe('GitHub Pages deployment setup', () => {
       });
     });
 
-    const sourceAssets = await Promise.all([
-      '../res/404_builds_logo.png',
-      '../res/MrCodeGameAndAnime.jpg',
-      '../res/favicon.png',
-    ].map((path) => readFile(new URL(path, import.meta.url))));
-    const emittedAssets = sourceAssets.map((source) => outputFiles.find((asset) => (
-      asset.type === 'asset' && Buffer.from(asset.source).equals(source)
-    )));
-
-    emittedAssets.forEach((asset) => expect(asset).toBeDefined());
     const aboutEntry = outputFiles.find((output) => (
       output.type === 'chunk' && output.isEntry && output.name === 'about'
     ));
     expect(aboutEntry).toBeDefined();
-    [emittedAssets[0], emittedAssets[1]].forEach((asset) => {
+    const optimizedImages = outputFiles.filter((asset) => (
+      asset.type === 'asset' && /assets\/(404_builds_logo|MrCodeGameAndAnime)-[^/]+\.webp$/.test(asset.fileName)
+    ));
+    expect(optimizedImages).toHaveLength(2);
+    expect(optimizedImages.every((asset) => Buffer.byteLength(asset.source) < 400_000)).toBe(true);
+    optimizedImages.forEach((asset) => {
       expect(aboutEntry.code).toContain(asset.fileName.split('/').at(-1));
     });
 
     Object.values(builtPages).forEach((page) => page.window.close());
   }, 15_000);
 
-  it('gives About its own title and search description', async () => {
-    const html = await readSourceHtml('../../about.html');
-    expect(html).not.toBeNull();
-    if (!html) return;
+  it('ships unique search and social metadata on both built pages', async () => {
+    const outputFiles = await getBuiltOutputFiles();
+    const expectedPages = {
+      'index.html': {
+        title: '404 Builds | Software, Games & AI Experiments',
+        description: '404 Builds turns ideas and edge cases into software, games, AI tools, and experiments. Explore independent projects built from scratch.',
+        canonical: 'https://404builds.com/',
+      },
+      'about.html': {
+        title: 'About 404 Builds | Founder & Builder',
+        description: 'Meet the founder of 404 Builds, a digital foundry creating software, games, AI tools, and experiments from ideas, edge cases, and what-ifs.',
+        canonical: 'https://404builds.com/about.html',
+      },
+    };
 
-    const page = new JSDOM(html);
-    expect(page.window.document.title).toBe('About | 404 Builds');
-    expect(page.window.document.querySelector('meta[name="description"]')?.content)
-      .toBe('404 Builds is where failure meets creation. A digital foundry for the imperfect and the impossible.');
-    page.window.close();
+    Object.entries(expectedPages).forEach(([fileName, expected]) => {
+      const asset = outputFiles.find((output) => output.type === 'asset' && output.fileName === fileName);
+      expect(asset).toBeDefined();
+      const page = new JSDOM(Buffer.from(asset.source).toString());
+      const document = page.window.document;
+
+      expect(document.title).toBe(expected.title);
+      expect(document.querySelector('meta[name="description"]')?.content).toBe(expected.description);
+      expect(document.querySelector('link[rel="canonical"]')?.href).toBe(expected.canonical);
+      expect(document.querySelector('meta[property="og:title"]')?.content).toBe(expected.title);
+      expect(document.querySelector('meta[property="og:description"]')?.content).toBe(expected.description);
+      expect(document.querySelector('meta[property="og:url"]')?.content).toBe(expected.canonical);
+      expect(document.querySelector('meta[name="twitter:title"]')?.content).toBe(expected.title);
+      expect(document.querySelector('meta[name="twitter:description"]')?.content).toBe(expected.description);
+      expect(document.querySelector('meta[property="og:image"]')?.content)
+        .toBe('https://404builds.com/og-image.jpg');
+      expect(document.querySelector('meta[name="twitter:card"]')?.content).toBe('summary_large_image');
+      expect(document.querySelector('meta[name="twitter:image"]')?.content)
+        .toBe('https://404builds.com/og-image.jpg');
+      page.window.close();
+    });
+  });
+
+  it('publishes the two-page sitemap and compact social preview image', async () => {
+    const sitemapSource = await readFile(new URL('../public/sitemap.xml', import.meta.url), 'utf8');
+    const socialImage = await readFile(new URL('../public/og-image.jpg', import.meta.url));
+    const sitemap = new JSDOM(sitemapSource, { contentType: 'text/xml' });
+    expect(Array.from(sitemap.window.document.querySelectorAll('loc')).map((node) => node.textContent)).toEqual([
+      'https://404builds.com/',
+      'https://404builds.com/about.html',
+    ]);
+    expect(socialImage.byteLength).toBeLessThan(350_000);
+    sitemap.window.close();
   });
 
   it('loads Metricool on both pages and initializes the tracker with this site’s hash', async () => {

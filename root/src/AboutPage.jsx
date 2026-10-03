@@ -1,7 +1,7 @@
 import React from 'react';
 import { Footer, Header } from './App.jsx';
-import buildsLogo from '../res/404_builds_logo.png';
-import founderPortrait from '../res/MrCodeGameAndAnime.jpg';
+import buildsLogo from '../res/optimized/404_builds_logo.webp';
+import founderPortrait from '../res/optimized/MrCodeGameAndAnime.webp';
 
 const mission = '404 Builds is where failure meets creation. A digital foundry for the imperfect and the impossible. We turn ideas, edge cases, and “what ifs” into real products, experiences, and tools.';
 
