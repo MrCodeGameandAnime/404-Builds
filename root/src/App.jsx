@@ -63,6 +63,7 @@ const navigation = [
   { label: 'Projects', href: '#projects' },
   { label: 'Experiments', href: '#experiments' },
   { label: 'Studio', href: '#studio' },
+  { label: 'Blog', href: '#blog' },
   { label: 'About', href: '#about' },
 ];
 
@@ -81,12 +82,15 @@ function Arrow({ direction = '↗' }) {
 }
 
 function pageHref(href, page) {
-  if (href === '#about') return './about.html';
-  return page === 'about' ? `./index.html${href}` : href;
+  const prefix = page === 'post' ? '../' : './';
+  if (href === '#about') return `${prefix}about.html`;
+  if (href === '#blog') return `${prefix}blog.html`;
+  return page === 'home' ? href : `${prefix}index.html${href}`;
 }
 
-/** @param {{ page?: 'home' | 'about' }} props */
+/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' }} props */
 export function Header({ page = 'home' }) {
+  const activeHref = page === 'about' ? '#about' : ['blog', 'post'].includes(page) ? '#blog' : null;
   return (
     <header className="site-header">
       <div className="shell nav-shell">
@@ -102,7 +106,7 @@ export function Header({ page = 'home' }) {
         </div>
         <nav className="primary-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
-            <a key={item.label} href={pageHref(item.href, page)}>{item.label}</a>
+            <a key={item.label} href={pageHref(item.href, page)} aria-current={item.href === activeHref ? 'page' : undefined}>{item.label}</a>
           ))}
         </nav>
       </div>
@@ -269,7 +273,7 @@ function ExploreGrid() {
   );
 }
 
-/** @param {{ page?: 'home' | 'about' }} props */
+/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' }} props */
 export function Footer({ page = 'home' }) {
   return (
     <footer className="site-footer" id="studio">

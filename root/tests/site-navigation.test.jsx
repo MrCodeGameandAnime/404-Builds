@@ -5,6 +5,19 @@ import * as Site from '../src/App.jsx';
 import App from '../src/App.jsx';
 
 describe('page-aware shared navigation', () => {
+  test('the article header and footer link back out of the blog directory', () => {
+    render(<><Site.Header page="post" /><Site.Footer page="post" /></>);
+    const header = screen.getByRole('banner');
+    const navigation = within(header).getByRole('navigation', { name: 'Primary navigation' });
+    expect(within(navigation).getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '../blog.html');
+    expect(within(navigation).getByRole('link', { name: 'Blog' })).toHaveAttribute('aria-current', 'page');
+    expect(within(navigation).getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '../index.html#projects');
+    expect(within(navigation).getByRole('link', { name: 'About' })).toHaveAttribute('href', '../about.html');
+    const footer = screen.getByRole('contentinfo');
+    expect(within(footer).getByRole('link', { name: 'Blog footer link' })).toHaveAttribute('href', '../blog.html');
+    expect(within(footer).getByRole('link', { name: '404 Builds home' })).toHaveAttribute('href', '../index.html#top');
+  });
+
   test('groups the brand and primary action above the section links', () => {
     render(Site.Header ? React.createElement(Site.Header) : null);
 

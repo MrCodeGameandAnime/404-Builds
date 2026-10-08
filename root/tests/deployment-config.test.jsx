@@ -134,17 +134,51 @@ describe('GitHub Pages deployment setup', () => {
     });
   });
 
-  it('publishes the two-page sitemap and compact social preview image', async () => {
+  it('keeps the base site pages in the sitemap and a compact social preview image', async () => {
     const sitemapSource = await readFile(new URL('../public/sitemap.xml', import.meta.url), 'utf8');
     const socialImage = await readFile(new URL('../public/og-image.jpg', import.meta.url));
     const sitemap = new JSDOM(sitemapSource, { contentType: 'text/xml' });
     expect(Array.from(sitemap.window.document.querySelectorAll('loc')).map((node) => node.textContent)).toEqual([
       'https://404builds.com/',
       'https://404builds.com/about.html',
+      'https://404builds.com/blog.html',
     ]);
     expect(socialImage.byteLength).toBeLessThan(350_000);
     sitemap.window.close();
   });
+
+  it('builds readable blog pages, matching RSS items, and sitemap entries', async () => {
+    const files = await getBuiltOutputFiles();
+    const readAsset = (fileName) => {
+      const file = files.find((output) => output.type === 'asset' && output.fileName === fileName);
+      expect(file, fileName).toBeDefined();
+      return Buffer.from(file.source).toString();
+    };
+    const index = new JSDOM(readAsset('blog.html'));
+    const post = new JSDOM(readAsset('blog/welcome-to-404-builds.html'));
+    expect(index.window.document.querySelector('h1').textContent).toBe('The build log.');
+    expect(index.window.document.querySelector('.blog-card h2 a').getAttribute('href')).toBe('./blog/welcome-to-404-builds.html');
+    const document = post.window.document;
+    expect(document.querySelectorAll('h1')).toHaveLength(1);
+    expect(document.querySelector('h1').textContent).toBe('Welcome to 404 Builds');
+    expect(document.querySelector('.post-content').textContent).toContain('where failure meets creation');
+    expect(document.querySelector('link[rel="canonical"]').href).toBe('https://404builds.com/blog/welcome-to-404-builds.html');
+    expect(document.querySelector('meta[property="og:type"]').content).toBe('article');
+    expect(document.querySelector('link[rel="alternate"]').getAttribute('href')).toBe('../rss.xml');
+    expect(document.querySelector('script[type="module"]')).toBeNull();
+    expect(document.querySelector('link[rel="stylesheet"]').getAttribute('href')).toMatch(/^\.\.\/assets\//);
+    expect([...document.querySelectorAll('img')].every((image) => image.src.startsWith('data:'))).toBe(true);
+    const rss = new JSDOM(readAsset('rss.xml'), { contentType: 'text/xml' });
+    expect(rss.window.document.querySelector('item link').textContent).toBe('https://404builds.com/blog/welcome-to-404-builds.html');
+    const sitemap = new JSDOM(readAsset('sitemap.xml'), { contentType: 'text/xml' });
+    expect([...sitemap.window.document.querySelectorAll('loc')].map((node) => node.textContent)).toEqual([
+      'https://404builds.com/',
+      'https://404builds.com/about.html',
+      'https://404builds.com/blog.html',
+      'https://404builds.com/blog/welcome-to-404-builds.html',
+    ]);
+    [index, post, rss, sitemap].forEach((page) => page.window.close());
+  }, 30_000);
 
   it('loads Metricool on both pages and initializes the tracker with this site’s hash', async () => {
     const pagesHtml = await Promise.all([

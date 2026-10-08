@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { blogPlugin } from './scripts/blog-plugin.js';
 
 const rootPackage = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(rootPackage, '..');
@@ -11,6 +12,7 @@ export default defineConfig({
   publicDir: path.join(rootPackage, 'public'),
   base: './',
   cacheDir,
+  plugins: [blogPlugin()],
   build: {
     outDir: path.join(rootPackage, 'dist'),
     emptyOutDir: true,
@@ -18,6 +20,7 @@ export default defineConfig({
       input: [
         path.resolve(projectRoot, 'index.html'),
         path.resolve(projectRoot, 'about.html'),
+        path.resolve(projectRoot, 'blog.html'),
       ],
     },
   },
