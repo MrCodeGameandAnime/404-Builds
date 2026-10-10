@@ -58,6 +58,14 @@ The public Turnstile site key and Worker URL are not secrets. Store `SMTP2GO_API
 - Mock external HTTP calls in tests; tests must never send real mail or require Cloudflare credentials.
 - Run the complete existing Vitest suite and production Vite build. Verify the generated `contact.html` exists and Worker source is absent from the GitHub Pages artifact.
 
+## Official references
+
+- [Cloudflare Workers pricing and included usage](https://developers.cloudflare.com/workers/platform/pricing/)
+- [Turnstile plans](https://developers.cloudflare.com/turnstile/plans/)
+- [Turnstile server-side token validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)
+- [SMTP2GO standard email API](https://developers.smtp2go.com/reference/send-standard-email)
+- [SMTP2GO Free Plan limits](https://support.smtp2go.com/hc/en-gb/articles/223087947-Free-Plan)
+
 ## Out of scope
 
 Blog/RSS changes, Square/payment features, a message database, attachments, public email-directory changes, and automatic deployment of the Worker are excluded.
