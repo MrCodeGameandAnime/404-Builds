@@ -18,15 +18,14 @@ describe('page-aware shared navigation', () => {
     expect(within(footer).getByRole('link', { name: '404 Builds home' })).toHaveAttribute('href', '../index.html#top');
   });
 
-  test('groups the brand and primary action above the section links', () => {
+  test('keeps the brand above section links without the redundant primary action', () => {
     render(Site.Header ? React.createElement(Site.Header) : null);
 
     const header = screen.getByRole('banner');
     const brand = within(header).getByRole('link', { name: '404 Builds home' });
-    const action = within(header).getByRole('link', { name: 'Start here' });
     const navigation = within(header).getByRole('navigation', { name: 'Primary navigation' });
 
-    expect(brand.parentElement).toBe(action.parentElement);
+    expect(within(header).queryByRole('link', { name: 'Start here' })).not.toBeInTheDocument();
     expect(brand.parentElement).not.toBe(navigation.parentElement);
     expect(brand.parentElement.nextElementSibling).toBe(navigation);
   });
@@ -58,7 +57,7 @@ describe('page-aware shared navigation', () => {
     expect(within(navigation).getByRole('link', { name: 'Experiments' })).toHaveAttribute('href', './index.html#experiments');
     expect(within(navigation).getByRole('link', { name: 'Studio' })).toHaveAttribute('href', './index.html#studio');
     expect(within(navigation).getByRole('link', { name: 'About' })).toHaveAttribute('href', './about.html');
-    expect(within(header).getByRole('link', { name: 'Start here' })).toHaveAttribute('href', './index.html#studio');
+    expect(within(header).queryByRole('link', { name: 'Start here' })).not.toBeInTheDocument();
   });
 
   test('the About footer routes its brand and section links back to the home page', () => {

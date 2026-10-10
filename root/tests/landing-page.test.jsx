@@ -90,12 +90,13 @@ describe('404 Builds landing page', () => {
     expect(hardwareLink).toHaveAttribute('href', '#studio');
   });
 
-  test('exposes named navigation and CTA links', () => {
+  test('exposes named navigation and hero CTA links without a redundant header action', () => {
     render(<App />);
 
     expect(screen.getByRole('link', { name: 'Projects' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Experiments' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Start here' })).toHaveAttribute('href', '#studio');
+    expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', './contact.html');
+    expect(screen.queryByRole('link', { name: 'Start here' })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /view builds/i })).toHaveAttribute('href', '#projects');
     const githubLinks = screen.getAllByRole('link', { name: 'GitHub' });
     expect(githubLinks).toHaveLength(2);

@@ -101,10 +101,6 @@ export function Header({ page = 'home' }) {
             <span className="brand-number">404</span>
             <span className="brand-word">BUILDS</span>
           </a>
-          <a className="nav-cta" href={pageHref('#studio', page)}>
-            <span>Start here</span>
-            <Arrow />
-          </a>
         </div>
         <nav className="primary-nav" aria-label="Primary navigation">
           {navigation.map((item) => (
