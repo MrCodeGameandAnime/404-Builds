@@ -1,0 +1,16 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "404-builds-contact-api",
+  "main": "index.js",
+  "compatibility_date": "2026-10-10",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "contact-api.404builds.com",
+      "custom_domain": true
+    }
+  ],
+  "secrets": {
+    "required": ["SMTP2GO_API_KEY", "TURNSTILE_SECRET_KEY"]
+  }
+}
