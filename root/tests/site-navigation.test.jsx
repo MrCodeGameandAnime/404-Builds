@@ -71,4 +71,20 @@ describe('page-aware shared navigation', () => {
     expect(within(footer).getByRole('link', { name: 'Studio footer link' })).toHaveAttribute('href', './index.html#studio');
     expect(within(footer).getByRole('link', { name: 'About footer link' })).toHaveAttribute('href', './about.html');
   });
+
+  test('the Contact page links back to the site, exposes Contact in both menus, and marks it current', () => {
+    render(<><Site.Header page="contact" /><Site.Footer page="contact" /></>);
+
+    const header = screen.getByRole('banner');
+    const navigation = within(header).getByRole('navigation', { name: 'Primary navigation' });
+    const contactLink = within(navigation).getByRole('link', { name: 'Contact' });
+    expect(contactLink).toHaveAttribute('href', './contact.html');
+    expect(contactLink).toHaveAttribute('aria-current', 'page');
+    expect(within(navigation).getAllByRole('link')).toHaveLength(6);
+    expect(within(navigation).getByRole('link', { name: 'Projects' })).toHaveAttribute('href', './index.html#projects');
+    expect(within(header).getByRole('link', { name: '404 Builds home' })).toHaveAttribute('href', './index.html#top');
+
+    const footer = screen.getByRole('contentinfo');
+    expect(within(footer).getByRole('link', { name: 'Contact footer link' })).toHaveAttribute('href', './contact.html');
+  });
 });

@@ -220,7 +220,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 760px) {
   .nav-shell { min-height: 0; display: grid; grid-template-areas: "identity" "navigation"; grid-template-columns: minmax(0, 1fr); gap: 11px; padding: 12px 0 10px; }
   .nav-identity-row { grid-area: identity; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .primary-nav { grid-area: navigation; order: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center; width: 100%; margin: 0; padding-top: 10px; border-top: 1px solid var(--line); gap: 0; text-align: center; font-size: clamp(7px, 2.1vw, 9px); letter-spacing: .05em; }
+  .primary-nav { grid-area: navigation; order: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: center; width: 100%; margin: 0; padding-top: 10px; border-top: 1px solid var(--line); gap: 0; text-align: center; font-size: clamp(7px, 2.1vw, 9px); letter-spacing: .05em; }
   .primary-nav a { white-space: nowrap; padding: 4px 0; }
   .nav-cta { order: 0; margin-left: 0; padding: 9px 11px; font-size: 9px; }
   .brand-number { font-size: 23px; }.brand-word { font-size: 17px; }

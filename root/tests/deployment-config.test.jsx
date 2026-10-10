@@ -3,6 +3,7 @@
 import { readFile } from 'node:fs/promises';
 import { JSDOM, ResourceLoader } from 'jsdom';
 import { describe, expect, it } from 'vitest';
+import { parse } from 'yaml';
 import { build, resolveConfig } from 'vite';
 import viteConfig from '../vite.config.js';
 
@@ -36,6 +37,17 @@ async function readSourceHtml(path) {
 }
 
 describe('GitHub Pages deployment setup', () => {
+  it('allows the initial Worker deploy before its private secrets are provisioned', async () => {
+    const configText = await readFile(new URL('../workers/contact-api/wrangler.jsonc', import.meta.url), 'utf8');
+    const config = JSON.parse(configText);
+
+    expect(config.secrets?.required).toBeUndefined();
+    expect(config.routes).toContainEqual({
+      pattern: 'contact-api.404builds.com',
+      custom_domain: true,
+    });
+  });
+
   it('uses a descriptive brand title in the browser tab', async () => {
     const html = await readFile(new URL('../../index.html', import.meta.url), 'utf8');
     const page = new JSDOM(html);
@@ -66,13 +78,13 @@ describe('GitHub Pages deployment setup', () => {
     page.window.close();
   }, 30_000);
 
-  it('builds both pages with relative local URLs and emits the optimized About images', async () => {
+  it('builds the main site pages with relative local URLs and emits the optimized About images', async () => {
     const outputFiles = await getBuiltOutputFiles();
     const builtPages = Object.fromEntries(outputFiles
-      .filter((asset) => asset.type === 'asset' && ['index.html', 'about.html'].includes(asset.fileName))
+      .filter((asset) => asset.type === 'asset' && ['index.html', 'about.html', 'contact.html'].includes(asset.fileName))
       .map((asset) => [asset.fileName, new JSDOM(Buffer.from(asset.source).toString())]));
 
-    expect(Object.keys(builtPages).sort()).toEqual(['about.html', 'index.html']);
+    expect(Object.keys(builtPages).sort()).toEqual(['about.html', 'contact.html', 'index.html']);
     Object.values(builtPages).forEach((page) => {
       page.window.document.querySelectorAll('[src], [href]').forEach((element) => {
         const url = element.getAttribute('src') ?? element.getAttribute('href');
@@ -109,6 +121,11 @@ describe('GitHub Pages deployment setup', () => {
         description: 'Meet the founder of 404 Builds, a digital foundry creating software, games, AI tools, and experiments from ideas, edge cases, and what-ifs.',
         canonical: 'https://404builds.com/about.html',
       },
+      'contact.html': {
+        title: 'Contact 404 Builds | Get in Touch',
+        description: 'Contact 404 Builds about a project, collaboration, question, or idea. Send a message directly to our support inbox.',
+        canonical: 'https://404builds.com/contact.html',
+      },
     };
 
     Object.entries(expectedPages).forEach(([fileName, expected]) => {
@@ -142,6 +159,7 @@ describe('GitHub Pages deployment setup', () => {
       'https://404builds.com/',
       'https://404builds.com/about.html',
       'https://404builds.com/blog.html',
+      'https://404builds.com/contact.html',
     ]);
     expect(socialImage.byteLength).toBeLessThan(350_000);
     sitemap.window.close();
@@ -175,6 +193,7 @@ describe('GitHub Pages deployment setup', () => {
       'https://404builds.com/',
       'https://404builds.com/about.html',
       'https://404builds.com/blog.html',
+      'https://404builds.com/contact.html',
       'https://404builds.com/blog/welcome-to-404-builds.html',
     ]);
     [index, post, rss, sitemap].forEach((page) => page.window.close());
@@ -218,5 +237,34 @@ describe('GitHub Pages deployment setup', () => {
       expect(payload).toEqual({ hash: '918f2d6d2b4e5d0c085914e143822eca' });
       page.window.close();
     });
+  });
+
+  it('keeps the Worker source and server secrets out of the Pages artifact', async () => {
+    const outputFiles = await getBuiltOutputFiles();
+    const fileNames = outputFiles.map((output) => output.fileName);
+    const outputText = outputFiles.map((output) => (
+      output.type === 'chunk' ? output.code : Buffer.from(output.source ?? '').toString()
+    )).join('\n');
+
+    expect(fileNames).toContain('contact.html');
+    expect(fileNames.some((fileName) => fileName.includes('workers/contact-api'))).toBe(false);
+    expect(outputText).not.toContain('SMTP2GO_API_KEY');
+    expect(outputText).not.toContain('TURNSTILE_SECRET_KEY');
+  });
+
+  it('passes only the public Turnstile site key to the Pages build step', async () => {
+    const workflowSource = await readFile(new URL('../../.github/workflows/deploy-pages.yml', import.meta.url), 'utf8');
+    const workflow = parse(workflowSource);
+    const buildStep = workflow.jobs.build.steps.find((step) => step.name === 'Build site');
+
+    expect(buildStep.env.VITE_TURNSTILE_SITE_KEY).toBe('${{ vars.VITE_TURNSTILE_SITE_KEY }}');
+    expect(JSON.stringify(buildStep.env)).not.toContain('SMTP2GO_API_KEY');
+    expect(JSON.stringify(buildStep.env)).not.toContain('TURNSTILE_SECRET_KEY');
+  });
+
+  it('uses six columns for the mobile primary navigation', async () => {
+    const styles = await readFile(new URL('../src/styles.css', import.meta.url), 'utf8');
+
+    expect(styles).toMatch(/\.primary-nav\s*\{[^}]*grid-template-columns:\s*repeat\(6,/s);
   });
 });

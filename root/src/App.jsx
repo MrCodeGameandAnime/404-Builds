@@ -65,6 +65,7 @@ const navigation = [
   { label: 'Studio', href: '#studio' },
   { label: 'Blog', href: '#blog' },
   { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
 ];
 
 /** @type {SocialLink[]} */
@@ -85,12 +86,13 @@ function pageHref(href, page) {
   const prefix = page === 'post' ? '../' : './';
   if (href === '#about') return `${prefix}about.html`;
   if (href === '#blog') return `${prefix}blog.html`;
+  if (href === '#contact') return `${prefix}contact.html`;
   return page === 'home' ? href : `${prefix}index.html${href}`;
 }
 
-/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' }} props */
+/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' | 'contact' }} props */
 export function Header({ page = 'home' }) {
-  const activeHref = page === 'about' ? '#about' : ['blog', 'post'].includes(page) ? '#blog' : null;
+  const activeHref = page === 'about' ? '#about' : page === 'contact' ? '#contact' : ['blog', 'post'].includes(page) ? '#blog' : null;
   return (
     <header className="site-header">
       <div className="shell nav-shell">
@@ -273,7 +275,7 @@ function ExploreGrid() {
   );
 }
 
-/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' }} props */
+/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' | 'contact' }} props */
 export function Footer({ page = 'home' }) {
   return (
     <footer className="site-footer" id="studio">

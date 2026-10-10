@@ -9,8 +9,5 @@
       "pattern": "contact-api.404builds.com",
       "custom_domain": true
     }
-  ],
-  "secrets": {
-    "required": ["SMTP2GO_API_KEY", "TURNSTILE_SECRET_KEY"]
-  }
+  ]
 }

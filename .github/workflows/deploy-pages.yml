@@ -38,6 +38,8 @@ jobs:
         working-directory: root
 
       - name: Build site
+        env:
+          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
         run: npm run build
         working-directory: root
 

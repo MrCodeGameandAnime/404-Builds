@@ -20,6 +20,7 @@ export default defineConfig({
       input: [
         path.resolve(projectRoot, 'index.html'),
         path.resolve(projectRoot, 'about.html'),
+        path.resolve(projectRoot, 'contact.html'),
         path.resolve(projectRoot, 'blog.html'),
       ],
     },
