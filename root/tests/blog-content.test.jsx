@@ -1,7 +1,10 @@
 // @vitest-environment node
 import { JSDOM } from 'jsdom';
 import { describe, expect, it } from 'vitest';
-import { blogHead, buildRss, buildSitemap, parsePost } from '../scripts/blog-content.js';
+import { fileURLToPath } from 'node:url';
+import { blogHead, buildRss, buildSitemap, parsePost, readPosts } from '../scripts/blog-content.js';
+
+const postsDirectory = fileURLToPath(new URL('../blog/posts', import.meta.url));
 
 const source = `---
 title: Tools & ideas
@@ -19,6 +22,15 @@ const message = '<hello>';
 `;
 
 describe('blog content and RSS', () => {
+  it('publishes one launch article per product in newest-release-first order', async () => {
+    const posts = await readPosts(postsDirectory);
+    expect(posts.map(({ slug, date }) => ({ slug, date }))).toEqual([
+      { slug: 'voice-bridge-launch', date: '2026-10-10' },
+      { slug: 'windows-asset-creator-launch', date: '2026-09-29' },
+      { slug: 'headsup-ci-launch', date: '2026-09-17' },
+    ]);
+  });
+
   it('renders Markdown with one page-level heading and date/author defaults', () => {
     const post = parsePost(source, 'tools-and-ideas.md');
     expect(post.url).toBe('https://404builds.com/blog/tools-and-ideas.html');

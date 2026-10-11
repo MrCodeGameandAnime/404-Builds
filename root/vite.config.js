@@ -22,6 +22,7 @@ export default defineConfig({
         path.resolve(projectRoot, 'about.html'),
         path.resolve(projectRoot, 'contact.html'),
         path.resolve(projectRoot, 'blog.html'),
+        path.resolve(projectRoot, 'products.html'),
       ],
     },
   },

@@ -78,7 +78,7 @@ describe('404 Builds landing page', () => {
     expect(screen.getByText('Physical builds, electronics, and unconventional ideas.')).toBeInTheDocument();
   });
 
-  test('routes only the AI category tile to the Bead Out AI repository', () => {
+  test('routes the AI category to its repository and the other categories to Products', () => {
     render(<App />);
 
     const aiLink = screen.getByRole('heading', { name: 'AI' }).closest('a');
@@ -86,8 +86,8 @@ describe('404 Builds landing page', () => {
     const hardwareLink = screen.getByRole('heading', { name: 'Hardware / Experiments' }).closest('a');
 
     expect(aiLink).toHaveAttribute('href', 'https://github.com/MrCodeGameandAnime/Bead-Out-AI');
-    expect(designLink).toHaveAttribute('href', '#studio');
-    expect(hardwareLink).toHaveAttribute('href', '#studio');
+    expect(designLink).toHaveAttribute('href', './products.html');
+    expect(hardwareLink).toHaveAttribute('href', './products.html');
   });
 
   test('exposes named navigation and hero CTA links without a redundant header action', () => {

@@ -7,7 +7,7 @@ import threadsIcon from '../res/threads.svg';
 import xIcon from '../res/x.svg';
 
 /**
- * @typedef {{ name: string, description: string, tags: string[], visual: 'heads-up' | 'wac' | 'dungeon', href: string }} Project
+ * @typedef {{ name: string, description: string, tags: string[], visual: 'heads-up' | 'wac' | 'dungeon' | 'voice-bridge', href: string, releaseDate?: string }} Project
  * @typedef {{ title: string, description: string, icon: 'brain' | 'palette' | 'chip', href?: string }} Category
  * @typedef {{ label: string, href: string }} NavigationItem
  * @typedef {{ label: string, href: string, icon: string }} SocialLink
@@ -38,6 +38,36 @@ const projects = [
   },
 ];
 
+/** @type {Project[]} */
+const products = [
+  {
+    name: 'HeadsUp',
+    description: 'Monitor GitHub Actions, workflow jobs, and exact-SHA CI results from a lightweight Windows app.',
+    tags: ['Apps', 'Developer tools'],
+    visual: 'heads-up',
+    href: 'https://apps.microsoft.com/detail/9nmls5ft4zrw?hl=en-US&gl=US',
+    releaseDate: '2026-09-17',
+  },
+  {
+    name: 'Windows Asset Creator',
+    description: 'Turn a PNG or JPEG into a validated Microsoft Store and MSIX asset package.',
+    tags: ['Apps', 'Multimedia design'],
+    visual: 'wac',
+    href: 'https://apps.microsoft.com/detail/9ppcx5fvpdn3?hl=en-US&gl=US',
+    releaseDate: '2026-09-29',
+  },
+  {
+    name: 'Voice Bridge',
+    description: 'Browse Google Voice messages, calls, voicemails, and media from your Takeout archive—kept local.',
+    tags: ['Apps', 'Productivity'],
+    visual: 'voice-bridge',
+    href: 'https://apps.microsoft.com/detail/9N6KNRV562N8?hl=en-us&gl=US&ocid=pdpshare',
+    releaseDate: '2026-10-10',
+  },
+];
+
+const productsByReleaseDate = [...products].sort((a, b) => b.releaseDate.localeCompare(a.releaseDate));
+
 /** @type {Category[]} */
 const categories = [
   {
@@ -62,7 +92,7 @@ const categories = [
 const navigation = [
   { label: 'Projects', href: '#projects' },
   { label: 'Experiments', href: '#experiments' },
-  { label: 'Studio', href: '#studio' },
+  { label: 'Products', href: 'products.html' },
   { label: 'Blog', href: '#blog' },
   { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
@@ -84,15 +114,16 @@ function Arrow({ direction = '↗' }) {
 
 function pageHref(href, page) {
   const prefix = page === 'post' ? '../' : './';
+  if (href === 'products.html') return `${prefix}products.html`;
   if (href === '#about') return `${prefix}about.html`;
   if (href === '#blog') return `${prefix}blog.html`;
   if (href === '#contact') return `${prefix}contact.html`;
   return page === 'home' ? href : `${prefix}index.html${href}`;
 }
 
-/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' | 'contact' }} props */
+/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' | 'contact' | 'products' }} props */
 export function Header({ page = 'home' }) {
-  const activeHref = page === 'about' ? '#about' : page === 'contact' ? '#contact' : ['blog', 'post'].includes(page) ? '#blog' : null;
+  const activeHref = page === 'products' ? 'products.html' : page === 'about' ? '#about' : page === 'contact' ? '#contact' : ['blog', 'post'].includes(page) ? '#blog' : null;
   return (
     <header className="site-header">
       <div className="shell nav-shell">
@@ -177,12 +208,19 @@ function ProjectVisual({ project }) {
           <div className="dungeon-player" />
         </>
       )}
+      {project.visual === 'voice-bridge' && (
+        <>
+          <div className="voice-bridge-device"><span /><i /><i /><i /><i /></div>
+          <div className="voice-bridge-wave wave-one" />
+          <div className="voice-bridge-wave wave-two" />
+        </>
+      )}
     </div>
   );
 }
 
-/** @param {{ project: Project }} props */
-function BuildCard({ project }) {
+/** @param {{ project: Project, actionLabel?: string }} props */
+function BuildCard({ project, actionLabel = 'View project' }) {
   return (
     <article className="build-card">
       <ProjectVisual project={project} />
@@ -193,7 +231,7 @@ function BuildCard({ project }) {
           {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
         </div>
         <div className="card-footer">
-          <a className="card-link" href={project.href} target="_blank" rel="noreferrer">View project <Arrow direction="→" /></a>
+          <a className="card-link" href={project.href} target="_blank" rel="noreferrer">{actionLabel} <Arrow direction="→" /></a>
           <a className="card-open" href={project.href} target="_blank" rel="noreferrer" aria-label={`${project.name} details`}><Arrow /></a>
         </div>
       </div>
@@ -257,7 +295,7 @@ function ExploreGrid() {
       </div>
       <div className="explore-grid">
         {categories.map((category) => (
-          <a className="explore-card" href={category.href ?? '#studio'} key={category.title}>
+          <a className="explore-card" href={category.href ?? './products.html'} key={category.title}>
             <CategoryIcon type={category.icon} />
             <div>
               <h3>{category.title}</h3>
@@ -271,10 +309,10 @@ function ExploreGrid() {
   );
 }
 
-/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' | 'contact' }} props */
+/** @param {{ page?: 'home' | 'about' | 'blog' | 'post' | 'contact' | 'products' }} props */
 export function Footer({ page = 'home' }) {
   return (
-    <footer className="site-footer" id="studio">
+    <footer className="site-footer">
       <div className="shell footer-shell">
         <div className="footer-brand">
           <a className="brand" href={pageHref('#top', page)} aria-label="404 Builds home">
@@ -298,6 +336,27 @@ export function Footer({ page = 'home' }) {
         </div>
       </div>
     </footer>
+  );
+}
+
+export function ProductsPage() {
+  return (
+    <div id="top" className="site-shell">
+      <div className="site-grid" aria-hidden="true" />
+      <Header page="products" />
+      <main className="products-main">
+        <section className="products-intro shell" aria-labelledby="products-heading">
+          <h1 id="products-heading"><span>Useful</span> tools</h1>
+          <p>Get the offical releases.</p>
+        </section>
+        <section className="section shell products-listings" aria-label="404 Builds products">
+          <div className="build-grid product-grid">
+            {productsByReleaseDate.map((product) => <BuildCard key={product.name} project={product} actionLabel="Microsoft Store" />)}
+          </div>
+        </section>
+      </main>
+      <Footer page="products" />
+    </div>
   );
 }
 

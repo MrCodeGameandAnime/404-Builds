@@ -81,10 +81,10 @@ describe('GitHub Pages deployment setup', () => {
   it('builds the main site pages with relative local URLs and emits the optimized About images', async () => {
     const outputFiles = await getBuiltOutputFiles();
     const builtPages = Object.fromEntries(outputFiles
-      .filter((asset) => asset.type === 'asset' && ['index.html', 'about.html', 'contact.html'].includes(asset.fileName))
+      .filter((asset) => asset.type === 'asset' && ['index.html', 'about.html', 'contact.html', 'products.html'].includes(asset.fileName))
       .map((asset) => [asset.fileName, new JSDOM(Buffer.from(asset.source).toString())]));
 
-    expect(Object.keys(builtPages).sort()).toEqual(['about.html', 'contact.html', 'index.html']);
+    expect(Object.keys(builtPages).sort()).toEqual(['about.html', 'contact.html', 'index.html', 'products.html']);
     Object.values(builtPages).forEach((page) => {
       page.window.document.querySelectorAll('[src], [href]').forEach((element) => {
         const url = element.getAttribute('src') ?? element.getAttribute('href');
@@ -96,6 +96,10 @@ describe('GitHub Pages deployment setup', () => {
       output.type === 'chunk' && output.isEntry && output.name === 'about'
     ));
     expect(aboutEntry).toBeDefined();
+    const productsEntry = outputFiles.find((output) => (
+      output.type === 'chunk' && output.isEntry && output.name === 'products'
+    ));
+    expect(productsEntry).toBeDefined();
     const optimizedImages = outputFiles.filter((asset) => (
       asset.type === 'asset' && /assets\/(404_builds_logo|MrCodeGameAndAnime)-[^/]+\.webp$/.test(asset.fileName)
     ));
@@ -125,6 +129,11 @@ describe('GitHub Pages deployment setup', () => {
         title: 'Contact 404 Builds | Get in Touch',
         description: 'Contact 404 Builds about a project, collaboration, question, or idea. Send a message directly to our support inbox.',
         canonical: 'https://404builds.com/contact.html',
+      },
+      'products.html': {
+        title: 'Products | 404 Builds',
+        description: 'Explore HeadsUp, Windows Asset Creator, and Voice Bridge—practical Windows apps from 404 Builds.',
+        canonical: 'https://404builds.com/products.html',
       },
     };
 
@@ -160,6 +169,7 @@ describe('GitHub Pages deployment setup', () => {
       'https://404builds.com/about.html',
       'https://404builds.com/blog.html',
       'https://404builds.com/contact.html',
+      'https://404builds.com/products.html',
     ]);
     expect(socialImage.byteLength).toBeLessThan(350_000);
     sitemap.window.close();
@@ -173,30 +183,56 @@ describe('GitHub Pages deployment setup', () => {
       return Buffer.from(file.source).toString();
     };
     const index = new JSDOM(readAsset('blog.html'));
-    const post = new JSDOM(readAsset('blog/welcome-to-404-builds.html'));
     expect(index.window.document.querySelector('h1').textContent).toBe('The build log.');
-    expect(index.window.document.querySelector('.blog-card h2 a').getAttribute('href')).toBe('./blog/welcome-to-404-builds.html');
-    const document = post.window.document;
-    expect(document.querySelectorAll('h1')).toHaveLength(1);
-    expect(document.querySelector('h1').textContent).toBe('Welcome to 404 Builds');
-    expect(document.querySelector('.post-content').textContent).toContain('where failure meets creation');
-    expect(document.querySelector('link[rel="canonical"]').href).toBe('https://404builds.com/blog/welcome-to-404-builds.html');
-    expect(document.querySelector('meta[property="og:type"]').content).toBe('article');
-    expect(document.querySelector('link[rel="alternate"]').getAttribute('href')).toBe('../rss.xml');
-    expect(document.querySelector('script[type="module"]')).toBeNull();
-    expect(document.querySelector('link[rel="stylesheet"]').getAttribute('href')).toMatch(/^\.\.\/assets\//);
-    expect([...document.querySelectorAll('img')].every((image) => image.src.startsWith('data:'))).toBe(true);
+    const expectedPosts = [
+      { slug: 'voice-bridge-launch', title: 'Voice Bridge is here', date: '2026-10-10' },
+      { slug: 'windows-asset-creator-launch', title: 'From one image to a full Store asset set', date: '2026-09-29' },
+      { slug: 'headsup-ci-launch', title: 'Meet HeadsUp CI', date: '2026-09-17' },
+    ];
+    expect([...index.window.document.querySelectorAll('.blog-card h2 a')].map((link) => link.getAttribute('href')))
+      .toEqual(expectedPosts.map(({ slug }) => `./blog/${slug}.html`));
+
+    const postPages = expectedPosts.map(({ slug }) => new JSDOM(readAsset(`blog/${slug}.html`)));
+    postPages.forEach((post, indexInList) => {
+      const document = post.window.document;
+      const expected = expectedPosts[indexInList];
+      expect(document.querySelectorAll('h1')).toHaveLength(1);
+      expect(document.querySelector('h1').textContent).toBe(expected.title);
+      expect(document.querySelector('time').dateTime).toBe(expected.date);
+      expect(document.querySelector('.post-content').textContent.trim()).not.toBe('');
+      expect(document.querySelector('link[rel="canonical"]').href)
+        .toBe(`https://404builds.com/blog/${expected.slug}.html`);
+      expect(document.querySelector('meta[property="article:published_time"]').content)
+        .toBe(`${expected.date}T00:00:00Z`);
+      expect(document.querySelector('meta[property="og:type"]').content).toBe('article');
+      expect(document.querySelector('link[rel="alternate"]').getAttribute('href')).toBe('../rss.xml');
+      expect(document.querySelector('script[type="module"]')).toBeNull();
+      expect(document.querySelector('link[rel="stylesheet"]').getAttribute('href')).toMatch(/^\.\.\/assets\//);
+      expect([...document.querySelectorAll('img')].every((image) => image.src.startsWith('data:'))).toBe(true);
+    });
+
     const rss = new JSDOM(readAsset('rss.xml'), { contentType: 'text/xml' });
-    expect(rss.window.document.querySelector('item link').textContent).toBe('https://404builds.com/blog/welcome-to-404-builds.html');
+    expect([...rss.window.document.querySelectorAll('item')].map((item) => ({
+      title: item.querySelector('title').textContent,
+      link: item.querySelector('link').textContent,
+      pubDate: item.querySelector('pubDate').textContent,
+    }))).toEqual([
+      { title: 'Voice Bridge is here', link: 'https://404builds.com/blog/voice-bridge-launch.html', pubDate: 'Sat, 10 Oct 2026 00:00:00 GMT' },
+      { title: 'From one image to a full Store asset set', link: 'https://404builds.com/blog/windows-asset-creator-launch.html', pubDate: 'Tue, 29 Sep 2026 00:00:00 GMT' },
+      { title: 'Meet HeadsUp CI', link: 'https://404builds.com/blog/headsup-ci-launch.html', pubDate: 'Thu, 17 Sep 2026 00:00:00 GMT' },
+    ]);
     const sitemap = new JSDOM(readAsset('sitemap.xml'), { contentType: 'text/xml' });
     expect([...sitemap.window.document.querySelectorAll('loc')].map((node) => node.textContent)).toEqual([
       'https://404builds.com/',
       'https://404builds.com/about.html',
       'https://404builds.com/blog.html',
       'https://404builds.com/contact.html',
-      'https://404builds.com/blog/welcome-to-404-builds.html',
+      'https://404builds.com/products.html',
+      'https://404builds.com/blog/voice-bridge-launch.html',
+      'https://404builds.com/blog/windows-asset-creator-launch.html',
+      'https://404builds.com/blog/headsup-ci-launch.html',
     ]);
-    [index, post, rss, sitemap].forEach((page) => page.window.close());
+    [index, ...postPages, rss, sitemap].forEach((page) => page.window.close());
   }, 30_000);
 
   it('loads Metricool on both pages and initializes the tracker with this site’s hash', async () => {
