@@ -1,0 +1,38 @@
+name: Linear-GitHub Sync
+
+on:
+  pull_request:
+    paths:
+      - "tmp/linear-github-sync/**"
+      - ".github/workflows/linear-github-sync.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "tmp/linear-github-sync/**"
+      - ".github/workflows/linear-github-sync.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tmp/linear-github-sync
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tmp/linear-github-sync/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Build container
+        run: docker build -t linear-github-sync:test .

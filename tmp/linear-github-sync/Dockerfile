@@ -1,7 +1,7 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package*.json tsconfig.json ./
-RUN npm install
+RUN npm ci
 COPY src ./src
 COPY tests ./tests
 RUN npm run build
@@ -16,3 +16,4 @@ USER node
 ENV DATA_DIR=/data
 EXPOSE 3000
 CMD ["node", "dist/src/server.js"]
+
