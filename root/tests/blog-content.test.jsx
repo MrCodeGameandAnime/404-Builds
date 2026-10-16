@@ -25,6 +25,7 @@ describe('blog content and RSS', () => {
   it('publishes one launch article per product in newest-release-first order', async () => {
     const posts = await readPosts(postsDirectory);
     expect(posts.map(({ slug, date }) => ({ slug, date }))).toEqual([
+      { slug: 'portable-dataclass-mpy-launch', date: '2026-10-16' },
       { slug: 'voice-bridge-launch', date: '2026-10-10' },
       { slug: 'windows-asset-creator-launch', date: '2026-09-29' },
       { slug: 'headsup-ci-launch', date: '2026-09-17' },
