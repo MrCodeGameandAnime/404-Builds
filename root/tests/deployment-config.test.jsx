@@ -121,17 +121,17 @@ describe('GitHub Pages deployment setup', () => {
         canonical: 'https://404builds.com/',
       },
       'about.html': {
-        title: 'About 404 Builds | Founder & Builder',
-        description: 'Meet the founder of 404 Builds, a digital foundry creating software, games, AI tools, and experiments from ideas, edge cases, and what-ifs.',
+        title: '404 Builds | About',
+        description: 'Meet the founder of 404 Builds, MrCodeGameAndAnime. Discover the builder behind the software, games, AI tools, and experiments.',
         canonical: 'https://404builds.com/about.html',
       },
       'contact.html': {
-        title: 'Contact 404 Builds | Get in Touch',
+        title: '404 Builds | Contact',
         description: 'Contact 404 Builds about a project, collaboration, question, or idea. Send a message directly to our support inbox.',
         canonical: 'https://404builds.com/contact.html',
       },
       'products.html': {
-        title: 'Products | 404 Builds',
+        title: '404 Builds | Products',
         description: 'Explore HeadsUp, Windows Asset Creator, and Voice Bridge—practical Windows apps from 404 Builds.',
         canonical: 'https://404builds.com/products.html',
       },

@@ -119,7 +119,7 @@ export function buildSitemap(base, posts) {
 }
 
 export function blogHead(post = null) {
-  const title = post ? `${post.title} | 404 Builds` : 'Blog | 404 Builds';
+  const title = post ? `${post.title} | 404 Builds` : '404 Builds | Blog';
   const description = post?.description || 'Project updates, experiments, and lessons from behind the builds. Read the 404 Builds blog or follow along with RSS.';
   const url = post?.url || `${siteUrl}/blog.html`;
   return `<title>${escapeXml(title)}</title>
