@@ -185,7 +185,7 @@ describe('GitHub Pages deployment setup', () => {
     const index = new JSDOM(readAsset('blog.html'));
     expect(index.window.document.querySelector('h1').textContent).toBe('The build log.');
     const expectedPosts = [
-      { slug: 'portable-dataclass-mpy-launch', title: 'From Dungeon Drifters to Portable Dataclass MPY', date: '2026-10-16' },
+      { slug: 'portable-dataclass-mpy-launch', title: 'From Dungeon Drifters to Portable Dataclass MPY', date: '2026-10-15' },
       { slug: 'voice-bridge-launch', title: 'Voice Bridge is here', date: '2026-10-10' },
       { slug: 'windows-asset-creator-launch', title: 'From one image to a full Store asset set', date: '2026-09-29' },
       { slug: 'headsup-ci-launch', title: 'Meet HeadsUp CI', date: '2026-09-17' },
@@ -218,7 +218,7 @@ describe('GitHub Pages deployment setup', () => {
       link: item.querySelector('link').textContent,
       pubDate: item.querySelector('pubDate').textContent,
     }))).toEqual([
-      { title: 'From Dungeon Drifters to Portable Dataclass MPY', link: 'https://404builds.com/blog/portable-dataclass-mpy-launch.html', pubDate: 'Fri, 16 Oct 2026 00:00:00 GMT' },
+      { title: 'From Dungeon Drifters to Portable Dataclass MPY', link: 'https://404builds.com/blog/portable-dataclass-mpy-launch.html', pubDate: 'Thu, 15 Oct 2026 00:00:00 GMT' },
       { title: 'Voice Bridge is here', link: 'https://404builds.com/blog/voice-bridge-launch.html', pubDate: 'Sat, 10 Oct 2026 00:00:00 GMT' },
       { title: 'From one image to a full Store asset set', link: 'https://404builds.com/blog/windows-asset-creator-launch.html', pubDate: 'Tue, 29 Sep 2026 00:00:00 GMT' },
       { title: 'Meet HeadsUp CI', link: 'https://404builds.com/blog/headsup-ci-launch.html', pubDate: 'Thu, 17 Sep 2026 00:00:00 GMT' },
