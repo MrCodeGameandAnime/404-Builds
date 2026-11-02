@@ -25,6 +25,7 @@ describe('blog content and RSS', () => {
   it('publishes articles in newest-publication-first order', async () => {
     const posts = await readPosts(postsDirectory);
     expect(posts.map(({ slug, date }) => ({ slug, date }))).toEqual([
+      { slug: 'when-open-source-isnt-so-open-follow-up', date: '2026-10-29' },
       { slug: 'when-open-source-isnt-so-open', date: '2026-10-20' },
       { slug: 'portable-dataclass-mpy-launch', date: '2026-10-15' },
       { slug: 'voice-bridge-launch', date: '2026-10-10' },

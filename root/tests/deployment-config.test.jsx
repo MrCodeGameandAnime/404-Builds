@@ -185,6 +185,7 @@ describe('GitHub Pages deployment setup', () => {
     const index = new JSDOM(readAsset('blog.html'));
     expect(index.window.document.querySelector('h1').textContent).toBe('The build log.');
     const expectedPosts = [
+      { slug: 'when-open-source-isnt-so-open-follow-up', title: "When Open Source Isn't So Open: A Follow-Up", date: '2026-10-29' },
       { slug: 'when-open-source-isnt-so-open', title: "When Open Source Isn't So Open", date: '2026-10-20' },
       { slug: 'portable-dataclass-mpy-launch', title: 'From Dungeon Drifters to Portable Dataclass MPY', date: '2026-10-15' },
       { slug: 'voice-bridge-launch', title: 'Voice Bridge is here', date: '2026-10-10' },
@@ -219,6 +220,7 @@ describe('GitHub Pages deployment setup', () => {
       link: item.querySelector('link').textContent,
       pubDate: item.querySelector('pubDate').textContent,
     }))).toEqual([
+      { title: "When Open Source Isn't So Open: A Follow-Up", link: 'https://404builds.com/blog/when-open-source-isnt-so-open-follow-up.html', pubDate: 'Thu, 29 Oct 2026 00:00:00 GMT' },
       { title: "When Open Source Isn't So Open", link: 'https://404builds.com/blog/when-open-source-isnt-so-open.html', pubDate: 'Tue, 20 Oct 2026 00:00:00 GMT' },
       { title: 'From Dungeon Drifters to Portable Dataclass MPY', link: 'https://404builds.com/blog/portable-dataclass-mpy-launch.html', pubDate: 'Thu, 15 Oct 2026 00:00:00 GMT' },
       { title: 'Voice Bridge is here', link: 'https://404builds.com/blog/voice-bridge-launch.html', pubDate: 'Sat, 10 Oct 2026 00:00:00 GMT' },
@@ -232,6 +234,7 @@ describe('GitHub Pages deployment setup', () => {
       'https://404builds.com/blog.html',
       'https://404builds.com/contact.html',
       'https://404builds.com/products.html',
+      'https://404builds.com/blog/when-open-source-isnt-so-open-follow-up.html',
       'https://404builds.com/blog/when-open-source-isnt-so-open.html',
       'https://404builds.com/blog/portable-dataclass-mpy-launch.html',
       'https://404builds.com/blog/voice-bridge-launch.html',
