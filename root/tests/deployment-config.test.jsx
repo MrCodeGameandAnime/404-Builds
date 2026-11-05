@@ -185,6 +185,8 @@ describe('GitHub Pages deployment setup', () => {
     const index = new JSDOM(readAsset('blog.html'));
     expect(index.window.document.querySelector('h1').textContent).toBe('The build log.');
     const expectedPosts = [
+      { slug: 'when-open-source-isnt-so-open-attribution-and-next-steps', title: "When Open Source Isn't So Open: Attribution and Next Steps", date: '2026-11-03' },
+      { slug: 'dungeon-drifters-v0-6', title: 'Dungeon Drifters v0.6: Into the Browser, Into the Dungeon', date: '2026-10-30' },
       { slug: 'when-open-source-isnt-so-open-follow-up', title: "When Open Source Isn't So Open: A Follow-Up", date: '2026-10-29' },
       { slug: 'when-open-source-isnt-so-open', title: "When Open Source Isn't So Open", date: '2026-10-20' },
       { slug: 'portable-dataclass-mpy-launch', title: 'From Dungeon Drifters to Portable Dataclass MPY', date: '2026-10-15' },
@@ -220,6 +222,8 @@ describe('GitHub Pages deployment setup', () => {
       link: item.querySelector('link').textContent,
       pubDate: item.querySelector('pubDate').textContent,
     }))).toEqual([
+      { title: "When Open Source Isn't So Open: Attribution and Next Steps", link: 'https://404builds.com/blog/when-open-source-isnt-so-open-attribution-and-next-steps.html', pubDate: 'Tue, 03 Nov 2026 00:00:00 GMT' },
+      { title: 'Dungeon Drifters v0.6: Into the Browser, Into the Dungeon', link: 'https://404builds.com/blog/dungeon-drifters-v0-6.html', pubDate: 'Fri, 30 Oct 2026 00:00:00 GMT' },
       { title: "When Open Source Isn't So Open: A Follow-Up", link: 'https://404builds.com/blog/when-open-source-isnt-so-open-follow-up.html', pubDate: 'Thu, 29 Oct 2026 00:00:00 GMT' },
       { title: "When Open Source Isn't So Open", link: 'https://404builds.com/blog/when-open-source-isnt-so-open.html', pubDate: 'Tue, 20 Oct 2026 00:00:00 GMT' },
       { title: 'From Dungeon Drifters to Portable Dataclass MPY', link: 'https://404builds.com/blog/portable-dataclass-mpy-launch.html', pubDate: 'Thu, 15 Oct 2026 00:00:00 GMT' },
@@ -234,6 +238,8 @@ describe('GitHub Pages deployment setup', () => {
       'https://404builds.com/blog.html',
       'https://404builds.com/contact.html',
       'https://404builds.com/products.html',
+      'https://404builds.com/blog/when-open-source-isnt-so-open-attribution-and-next-steps.html',
+      'https://404builds.com/blog/dungeon-drifters-v0-6.html',
       'https://404builds.com/blog/when-open-source-isnt-so-open-follow-up.html',
       'https://404builds.com/blog/when-open-source-isnt-so-open.html',
       'https://404builds.com/blog/portable-dataclass-mpy-launch.html',

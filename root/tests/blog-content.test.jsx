@@ -25,6 +25,8 @@ describe('blog content and RSS', () => {
   it('publishes articles in newest-publication-first order', async () => {
     const posts = await readPosts(postsDirectory);
     expect(posts.map(({ slug, date }) => ({ slug, date }))).toEqual([
+      { slug: 'when-open-source-isnt-so-open-attribution-and-next-steps', date: '2026-11-03' },
+      { slug: 'dungeon-drifters-v0-6', date: '2026-10-30' },
       { slug: 'when-open-source-isnt-so-open-follow-up', date: '2026-10-29' },
       { slug: 'when-open-source-isnt-so-open', date: '2026-10-20' },
       { slug: 'portable-dataclass-mpy-launch', date: '2026-10-15' },
